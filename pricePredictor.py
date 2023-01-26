@@ -122,7 +122,6 @@ class App(tk.Tk):
 
         # Altri modelli che ho provato ma che hanno dato risultati peggiori
         #model = ElasticNet(random_state=0)
-        #model = BayesianRidge()
         #model = DecisionTreeRegressor()
 
         model.fit(X_train, y_train)
