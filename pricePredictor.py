@@ -1,13 +1,16 @@
 import os
+from statistics import mean
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.express as px
 import tkinter as tk
 from tkinter import filedialog
+
+from numpy import absolute
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression, ElasticNet, BayesianRidge
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold, cross_val_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
@@ -145,7 +148,12 @@ class App(tk.Tk):
         r2 = r2_score(y_train, pred)
         print(f"TRAINING RESULTS:\nMAE: {mae}\nMSE: {mse}\nR2: {r2}")
 
-        # Creo due file csv per il test
+        # Ten fold cross validation
+        cv = KFold(n_splits=10, random_state=1, shuffle=True)
+        scores = cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
+        print(f"Cross Validation: {mean(absolute(scores))}")
+
+        # Creo due file csv per il test visivo
         X_test.to_csv('X_test.csv', index=False)
         y_test.to_csv('y_test.csv', index=False)
         self.model = model
