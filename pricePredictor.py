@@ -3,7 +3,6 @@ from statistics import mean
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import plotly.express as px
 import tkinter as tk
 from tkinter import filedialog
 
