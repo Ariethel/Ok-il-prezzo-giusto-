@@ -1,0 +1,288 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}    % fornisce la codifica adatta per il font della lingua italiana
+\usepackage[italian]{babel}
+\usepackage{geometry}       % gestisce il layout del documento
+% heightrounded modifica le regole di contenimento del testo per far rientrare il testo in un numero finito di righe
+\geometry{a4paper, top=2cm, bottom=2cm, left=2.5cm, right=2.5cm, heightrounded}
+
+\pagestyle{plain}           % numeri di pagina in fondo
+
+\usepackage{hyperref}       % usato per collegamenti ipertestuali
+\usepackage{graphicx}       % usato per inserire immagini
+\hypersetup{hidelinks}      % usato per rimuovere i riquadri dai link
+
+% autostyle adatta lo stile delle citazioni alla lingua del documento,
+% italian=gillments racchiude tra le virgolette caporali i campi che prevedono le virgolette
+\usepackage[autostyle,italian=guillemets]{csquotes}
+% usato per la generazione rif bibliografici, richiede l'uso di babel e csquotes, biblatex è il motore usato.
+% Le citazioni sono definite in termini di etichette numeriche come [1],[2],...
+\usepackage[bibstyle=numeric, citestyle=numeric-comp]{biblatex}
+\usepackage{quoting}        % usato per citazioni
+\usepackage{algpseudocode}  % usato per scrivere pseudo codice
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{sidecap}
+\usepackage{algorithmicx}
+\graphicspath{}
+
+\usepackage{titling}
+\renewcommand\maketitlehooka{\null\mbox{}\vfill}
+\renewcommand\maketitlehookd{\vfill\null}
+\author{\begin{center}
+    \includegraphics[scale=0.1]{images/logo_upscaled.jpeg}
+\end{center}\\Antonio Renzullo\\
+\url{https://github.com/Ariethel/Ok-il-prezzo-giusto-.git}}
+\date{}
+
+\begin{document}
+    % sezione dedicata al preambolo
+    \begin{titlepage}
+        \maketitle
+    \end{titlepage}
+    % produzione dell'indice automatica
+    \tableofcontents
+\newpage
+\part{Introduzione}
+    \section{Cos'è Ok, il prezzo è giusto?\\}
+        Si tratta di un progetto giocattolo, che potrebbe essere adattato per risolvere uno dei problemi della società moderna: l'eccessivo consumismo.\\ Trovo in particolar modo sconcertante la quantità di dispositivi mobile che ogni anno vengono gettati via anche se perfettamente funzionanti e funzionali al loro scopo. Questo progetto cerca di predire un prezzo "vincente" per i dispositivi usati, ovvero un prezzo che ne permetta la vendita in un lasso di tempo ragionevole senza svenderli, in modo da ridurre l'e-waste e generare maggiore interesse verso il mercato dell'usato.
+    \subsection{Specifiche PEAS}
+        L’acronimo PEAS sta per: Performance, Environment, Actuators e Sensors. Viene utilizzato per descrivere un ambiente.
+        \begin{itemize}
+            \item \textbf{Performance measure}: La precisione della previsione dei valori di output, nel caso in esame: MAE, MSE ed $R^2$.
+            \item \textbf{Ambiente}: Il file CSV contenente i dati di input e di output.
+            \item \textbf{Attuatori}: Il modello di regressione utilizzato per generare le previsioni.
+            \item \textbf{Sensori}: Una piccola interfaccia grafica per leggere i dati dal file CSV e per generare le previsioni utilizzando il modello di regressione.
+        \end{itemize}
+    \subsection{Caratteristiche dell'ambiente}
+        \begin{itemize}
+            \item \textbf{Completamente osservabile}: L'agente ha una visione completa di tutti i dati che gli vengono forniti in ogni momento.
+            \item \textbf{Deterministico}: lo stato successivo dell’ambiente è completamente determinato dallo stato corrente e dall’azione eseguita dall’agente, dunque, è un ambiente che non cambia nel tempo.
+            \item \textbf{Statico}: L'ambiente resta invariato durante le elaborazioni dell'agente
+            \item \textbf{Discreto}: L'ambiente fornisce un numero limitato di percezioni e predizioni.
+            \item \textbf{Episodico}: Le azioni dell'agente influiscono soltanto a breve termine, senza influenzare quelle future.
+            \item \textbf{Singolo agente}: L'ambiente permette l'esistenza di un solo agente.
+        \end{itemize}
+        
+\newpage
+\part{Tecniche di risoluzione}
+    \section{Machine Learning}
+    Il Machine Learning (ML) è un ramo dell'Intelligenza Artificiale (IA) che si concentra sullo sviluppo di algoritmi e modelli matematici che consentono a un computer di apprendere e migliorare automaticamente dall'esperienza, senza essere esplicitamente programmati.
+    \newline
+    In sintesi, il Machine Learning è una parte dell'IA che si concentra sull'apprendimento automatico dai dati, mentre l'IA è un campo più ampio che comprende anche altre tecniche per creare sistemi intelligenti.\\
+    \\
+    Durante lo sviluppo di questa demo ci si è concentrati su una tipologia di machine learning detto \textbf{apprendimento supervisionato}, questo consiste nel fornire all'agente dei dati etichettati, ovvero comprensivi di variabili indipendenti (quelli che si usano per la predizioni) e della variabile dipendente (quella che si vuole predire).\newline I modelli che si andranno ad utilizzare per la risoluzione del problema in questione sono basati su \textbf{algoritmi di regressione}, ovvero tecniche in grado di predire il valore di variabili continue a partire dagli input forniti. 
+    \subsection{Modello di approccio al problema}
+    Per progettare una soluzione incentrata sul machine learning si fa necessario un approccio di tipo ingegneristico.\newline
+    \textbf{CRISP-DM} è un acronimo che sta per "Cross Industry Standard Process for Data Mining", è una metodologia standard per la conduzione di progetti di data mining e di business intelligence. La metodologia CRISP-DM è stata sviluppata per essere indipendente dalla specifica industria o dal tipo di dati, e può essere utilizzata per qualsiasi progetto di data mining.\\
+
+    La metodologia CRISP-DM è composta da sei fasi:
+
+        \begin{itemize}
+            \item Comprensione del business e del contesto
+            \item Data understanding
+            \item Preparazione dei dati
+            \item Modellazione
+            \item Valutazione
+            \item Deployment (utilizzo dei risultati)
+        \end{itemize}   
+    \newline
+    % Valutare se rimuovere
+    La fase di comprensione del business e del contesto consente di definire gli obiettivi e le aspettative del progetto. La fase di data understanding consente di acquisire una conoscenza dei dati disponibili, mentre la fase di preparazione dei dati consente di preparare i dati per la modellazione. La fase di modellazione consiste nell'applicazione di algoritmi di data mining per creare modelli predittivi. La fase di valutazione consente di valutare l'accuratezza dei modelli creati, mentre la fase di deployment consente di utilizzare i risultati ottenuti per risolvere i problemi di business.
+
+    \subsection{Comprensione del business e del contesto}
+    Durante questa fase si raccolgono i requisiti e gli obiettivi di business.
+    \newline
+    \\
+    \textbf{Obiettivi di business}
+    L'agente avrà come obiettivo quello di stimare un prezzo vincente per la vendita di uno smartphone in un tempo relativamente breve e senza recare una eccessiva perdita economica al proprietario. La previsione andrà fatta sulla base delle caratteristiche del dispositivo.\newline
+    \\
+    \textbf{Dataset}
+    Il dataset utilizzato per questa demo si trova su Kaggle al link \url{https://www.kaggle.com/datasets/ahsan81/used-handheld-device-data}\newline
+    \\
+    \\
+    \\
+    \textbf{Tecnologie impiegate}
+    Tutto è stato scritto utilizzando il linguaggio Python. Per il caricamento del dataset e per alcune operazioni di pulizia è stato scelto di utilizzare Pandas, mentre per la generazione di grafici si è optato per PyPlot. Tutta la parte di modellazione del dataset ed addestramento del modello è invece stata realizzata con l'ausilio di scikit-learn. Inoltre, per la semplicissima interfaccia grafica si è fatto riferimento alla libreria Tkinter.\\
+    \subsection{Data Understanding}
+    Il dataset di partenza è piuttosto semplice. Questo contiene \textbf{3454} entry di smartphone usati con 15 caratteristiche per riga:
+    \begin{itemize}
+        \item Nome del produttore
+        \item Sistema operativo
+        \item Misura dello schermo in cm
+        \item Se dotato di tecnologia 4g (y/n)
+        \item Se dotato di tecnologia 5g (y/n)
+        \item Megapixel camera frontale
+        \item Megapixel camera posteriore
+        \item Ammontare di memoria interna in GB
+        \item Ammontare di RAM in GB
+        \item Dimensione della batteria in mAh
+        \item Peso in grammi
+        \item Anno di uscita sul mercato
+        \item Numero di giorni di utilizzo del dispositivo
+        \item Prezzo da nuovo (normalizzato)
+        \item Prezzo da usato (normalizzato)
+    \end{itemize}
+    \newline
+    Sfortunatamente, nonostante le richieste di diversi utenti, non ci è stato dato sapere quale tipo di normalizzazione il creatore di questo dataset abbia applicato  agli ultimi due campi. Speculativamente parlando sembra essere stata utilizzata una \textbf{boxcox transformation}, ma questa operazione risulta impossibile da invertire senza il parametro lambda utilizzato per la sua applicazione.\newline
+    Trattandosi di un Dataset costruito a scopo didattico, questo aveva pochissimi problemi, per cui la fase di preparazione dei dati è risultata piuttosto veloce.\newline
+    Prima di tutto, grazie ad uno dei comandi della libreria Pandas ho stampanto alcune informazioni sul database, tra le quali eventuali entry mancanti.\\
+    \begin{center}
+        \includegraphics{images/info.png}
+    \end{center}
+    \newline\\
+    Come si può vedere dalla figura ci sono in totale \textbf{202} valori NULL. Questi sono stati integrati su un dataset fantoccio attraverso un SimpleImputer preso da scikit-learn. La tecnica di \textbf{data imputation} utilizzata è quella "most-frequent", ovvero la sostituzione dei valori nulli con quelli di frequenza maggiore all'interno della colonna.\newline
+    Una volta terminato questo passaggio si è voluta verificare la linearità dei dati al fine di scegliere, in un successivo momento, il modello più adatto a risolvere il problema in questione. Per effettuare questo controllo sono state utilizzate due tecniche:
+    \begin{itemize}
+        \item Plot di alcuni valori su grafico.
+        \item Test di Pearson.
+    \end{itemize}
+    \newpage
+    \subsubsection{Plot su grafico}\newline
+    Questo test non era strettamente necessario, ma è risultato utile per rendersi conto visivamente della distribuzione di alcune features su grafico.
+    Sono quindi state scelte:
+    \begin{itemize}
+        \item Misura dello schermo
+        \item Megapixel camera frontale
+        \item Megapixel camera posteriore
+        \item Ammontare di memoria interna
+        \item Ammontare di RAM
+        \item Dimensione della batteria
+        \item Peso
+        \item Numero di giorni di utilizzo del dispositivo
+        \item Prezzo da nuovo 
+    \end{itemize}\newline
+    Queste caratteristiche sono, per loro natura, distribuite su scale numeriche differenti. Per tale ragione si è scelto di normalizzarle attraverso un algoritmo MinMaxScaler, risultando in valori che variano al massimo tra 0 ed 1.\newline\\
+    \begin{center}
+        \includegraphics[scale=0.3]{images/grafici.png}
+    \end{center}
+    \newline
+    Dal grafico si vede (abbastanza) chiaramente la linearità dei dati, nonostante gli inevitabili \textbf{outiliers}.
+    \newpage
+    \subsubsection{Test di linearità di Pearson}\newline
+    In statistica, l'indice di correlazione di Pearson (anche detto coefficiente di correlazione lineare) tra due variabili statistiche è un indice che esprime un'eventuale relazione di linearità tra esse.\newline Questo deve risultare in un valore compreso tra [-1,+1], dove +1 corrisponde alla perfetta correlazione lineare positiva, 0 corrisponde a un'assenza di correlazione lineare e -1 corrisponde alla perfetta correlazione lineare negativa.\newline
+    Matematicamente parlando, date due variabili statistiche $X$ ed $Y$, l'indice di correlazione di Pearson è definito come la loro covarianza divisa per il prodotto delle deviazioni standard delle due variabili:\newline
+    \[ \rho XY= \frac{\sigma XY}{\sigma_{X}\sigma_{Y}}\]
+    \newline
+    Per fortuna il test è incapsulato in una funzione corr(), quindi si può facilmente riportare il suo esito in un file csv, per comodità chiamato "correlation.csv".\newline Analizzando questo file si può facilmente notare la correlazione lineare positiva tra le variabili in esame, ad eccezione (giustamente) dei giorni di utilizzo del dispositivo, che vanno a far decrescere il valore di questo.\newline\\
+    \newpage
+    \subsection{Data Preparation}
+    Verificata la linearità dei dati numerici si è passato a lavorare sul dataset reale. Grazie, infatti, alla funzione $get\_dummies()$
+    di pandas si può ottenere un dataset le cui variabili categoriche vengono \textbf{scalate} con una tecnica di \textbf{OneHot Encoding}, ovvero codificate in stringhe binarie univocamente distinte.\newline
+    Vengono infine riapplicate le tecniche di Data Imputation di cui sopra, che convertono il dataframe in un array NumPy, problema facilmente aggirabile passando l'array come parametro alla funzione di creazione dataframe di Pandas. Per comodità il dataframe è poi stato splittato in:
+    \begin{itemize}
+        \item Un dataframe dal quale è stata \textbf{rimossa} la variabile dipendente
+        \item Un dataframe contenente \textbf{soltanto} la variabile dipendente
+    \end{itemize}\newline
+    Questo passaggio è necessario per evitare fenomeni di \textbf{data leakage} in fase di apprendimento.\\
+    Trattandosi di un dataset didattico, non sono state necessarie ulteriori manipolazioni come \textbf{Data Balancing} o \textbf{Feature Selection}.
+    \subsection{Modelling}
+    Si procede adesso a valutare il migliore approccio per risolvere il problema. Come già detto in precedenza, questo è un problema di regressione, si andranno quindi a valutare diversi algoritmi di regressione.\\
+    La regressione si può distinguere in \textbf{singola} e \textbf{multipla}. Nel caso in esame si parla di regressione multipla poichè la variabile dipendente viene predetta con l'ausilio di più variabili indipendenti.\newline\\
+    \textbf{Algoritmi testati}\newline
+    Dall'analisi dei dati e dal fatto che il dataset stesso sia stato costruito puramente a scopo didattico, si potrebbe subito intuire che il miglior regressore per la soluzione del problema sia quello lineare. Tuttavia noi siamo studenti inesperti, quindi non ci fidiamo troppo e proviamo altri algoritmi: 
+    \begin{itemize}
+        \item ElasticNet
+        \item Decision Tree Regressor
+        \item Linear Regression
+    \end{itemize}
+    \newpage
+        \subsubsection{ElasticNet}\newline
+        La regressione elastic net è una combinazione di due tecniche di regressione: la regressione \textbf{Lasso} (Least Absolute Shrinkage and Selection Operator) e la regressione \textbf{Ridge}.\newline
+        La regressione Lasso utilizza una penalità L1 per selezionare automaticamente alcune caratteristiche e allo stesso tempo ridurre il valore dei coefficienti delle caratteristiche non selezionate a zero. Questo è utile per selezionare le caratteristiche più importanti, ma a volte può essere troppo aggressivo e generare una selezione di caratteristiche errata. Vista la modesta quantità di features per ogni smartphone, alcune di queste  si sarebbero, probabilmente, potute scartare per portare ad un miglioramento delle performance.\newline
+        La regressione Ridge utilizza una penalità L2 per limitare la grandezza dei coefficienti delle caratteristiche. Ciò consente di evitare overfitting, ma non seleziona automaticamente le caratteristiche.\newline
+        La regressione elastic net combina le penalità L1 e L2 della regressione Lasso e Ridge. Ciò consente di ottenere i vantaggi della selezione automatica delle caratteristiche della regressione Lasso e della regolarizzazione dei coefficienti della regressione Ridge. Inoltre, l'utilizzo di entrambe le penalità consente di ottenere una soluzione intermedia tra la regressione Lasso e Ridge, evitando i loro svantaggi.\newline
+        La regressione elastic net utilizza un parametro di equilibrio (chiamato \textbf{"alpha"}) per controllare la misura in cui la penalità L1 e L2 vengono utilizzate. Un alpha maggiore significa una maggiore enfasi sulla penalità L1, mentre un alpha minore significa una maggiore enfasi sulla penalità L2.\newline
+        \begin{center}
+            \includegraphics[scale=0.5]{images/elasticNet.png}
+        \end{center}
+        \newpage
+        \subsubsection{Decision Tree Regressor}\newline
+        È un modello che utilizza un \textbf{albero di decisione} per effettuare previsioni sulla base dei valori di alcune caratteristiche. L'albero di decisione è costruito mediante un processo di suddivisione ricorsiva dei dati in base al valore delle caratteristiche. Ogni nodo interno dell'albero rappresenta una caratteristica e ogni foglia rappresenta un valore predetto.\newline
+        Il processo inizia dal nodo \textbf{radice}, che rappresenta l'intero dataset. Successivamente, l'algoritmo seleziona la caratteristica che suddivide i dati in modo migliore in due sottoinsiemi. Per questa selezione non è, chiaramente, possibile utilizzare l'\textbf{information gain} come per i  problemi di classificazione, viene quindi utilizzato l'errore quadratico medio \textbf{$(MSE)^2$}. Questa caratteristica viene poi utilizzata come condizione di test al nodo interno. I sottoinsiemi di dati vengono quindi passati ai nodi figli sinistro e destro e il processo viene ripetuto fino a quando non viene soddisfatto un \textbf{criterio di arresto}. Il criterio di arresto può essere un numero minimo di campioni per foglia, una profondità massima dell'albero o un miglioramento minimo nella qualità delle suddivisioni.\newline\\
+        Il regressore decision tree è un modello in grado di gestire relazioni non lineari tra caratteristiche e target, quindi non particolarmente indicato nel caso in esame.\newline Funziona anche bene con caratteristiche sia categoriche che numeriche. Tuttavia, è un modello suscettibile a problemi di overfitting se l'albero viene fatto crescere troppo profondamente. Possono essere utilizzate tecniche di \textbf{potatura} per evitare overfitting rimuovendo i rami che non migliorano l'accuratezza del modello.\newline\\
+        \begin{center}
+            \includegraphics[scale=0.5]{images/decisionTree.png}
+        \end{center}   
+        \newpage
+        \subsubsection{Linear Regression}
+        La regressione lineare è un metodo statistico utilizzato per individuare la relazione tra una variabile indipendente (x) e una o più variabili dipendenti (y). Viene utilizzato per costruire una linea di regressione, che rappresenta il modello matematico che descrive la relazione tra x e y. La regressione lineare è utilizzata in molti campi, tra cui l'economia, la finanza e l'ingegneria.\\
+        Per il caso in esame risulta essere l'algoritmo di regressione più efficiente, e quello che in generale approssima meglio la nostra funzione.\newline\\
+        I vantaggi della regressione lineare includono:
+        \begin{itemize}
+            \item \textbf{Facilità di interpretazione}: i coefficienti della regressione possono essere facilmente interpretati come cambiamenti delle risposte in relazione ai cambiamenti delle variabili indipendenti.
+            \item \textbf{Affidabilità}: la regressione lineare è un modello affidabile quando i dati soddisfano le ipotesi di linearità e di indipendenza delle osservazioni.
+            \item \textbf{Semplicità}: la regressione lineare è un modello semplice e facile da utilizzare.
+        \end{itemize}
+        \newline\\
+        Gli svantaggi della regressione lineare includono:
+        \begin{itemize}
+            \item \textbf{Assunzioni di linearità}: la regressione lineare richiede che i dati soddisfino l'ipotesi di linearità, il che può non essere sempre il caso nei dati reali.
+            \item \textbf{Indipendenza delle osservazioni}: la regressione lineare richiede che le osservazioni siano indipendenti.
+            \item \textbf{Non adatta alle relazioni non lineari}: la regressione lineare è limitata alle relazioni lineari tra le variabili.
+        \end{itemize}\newline
+        \begin{center}
+            \includegraphics[scale=0.7]{images/linearRegression.png}
+        \end{center}
+        \newpage
+        \subsection{Validazione}
+        La \textbf{cross-validation} è una tecnica utilizzata per valutare la performance di un modello di machine learning su un insieme di dati di test indipendente. Consiste nel dividere i dati di input in più parti (chiamate "fold"), addestrare il modello su una parte di essi e testarlo sull'altra parte.\\ Questo processo viene ripetuto più volte, utilizzando una diversa combinazione di fold come set di addestramento e di test ogni volta, e i risultati vengono quindi combinati per ottenere una stima più precisa della performance del modello. A seconda del numero \textbf{k} di fold scelto, la codifica prende il nome di \textbf{k-fold cross validation}.\newline
+        In questo caso si è scelto di usare una 10-fold cross validation.\newline\\
+        \includegraphics[scale=0.4]{images/cross-validation.png}
+        \newpage
+        \subsection{Valutazione dei modelli}
+        Una volta addestrati i modelli, sono necessarie delle metriche oggettive per verificarne la bontà, sono quindi state utilizzate:\\
+        \begin{itemize}
+            \item $MAE$
+            \item $MSE$
+            \item $R^2$
+        \end{itemize}
+        \\
+        \textbf{MAE: }Questa misura la differenza media assoluta tra i valori previsti e i valori effettivi. Più precisamente, per ogni punto di dati, si calcola la differenza tra la previsione e il valore reale, si prende il valore assoluto di questa differenza e poi si calcola la media di tutte queste differenze. Più piccola è la MAE, migliore è la precisione del modello.\newline
+        \[
+                        MAE = \frac{\sum_{i=1}^{n}(\tilde{y_i} - y_i)}{n}
+        \]
+        \\
+        \\
+        \textbf{MSE: }Essa misura la differenza media quadratica tra i valori previsti e i valori effettivi. Quindi, per ogni punto di dati, si calcola la differenza tra la previsione e il valore reale, si eleva al quadrato questa differenza e poi si calcola la media di tutte queste differenze. La MSE è spesso utilizzata perché penalizza maggiormente gli errori rispetto ad una metrica come la MAE. Più piccola è la MSE, migliore è la precisione del modello.\newline
+        \[
+                        MSE = \frac{\sum_{i=1}^{n}(\tilde{y_i} - y_i)^2}{n}
+        \]
+        \\
+        \\
+        $\mathbf{R^2: }$ L'indice R-squared è una metrica comunemente utilizzata per valutare la bontà di adattamento di un modello di regressione. Esso indica la percentuale di varianza nei dati spiegata dal modello.\newline
+        L'indice $R^2$ varia tra 0 e 1, dove un valore di 1 indica che il modello spiega perfettamente la varianza nei dati, mentre un valore di 0 indica che il modello non spiega affatto la varianza nei dati.
+        In generale, un indice $R^2$ più alto è preferibile, poiché significa che il modello spiega una maggiore percentuale della varianza nei dati. Tuttavia, è importante notare che un alto valore di $R^2$ non garantisce necessariamente che il modello sia adatto per la previsione o la spiegazione di fenomeni futuri.\newline
+        Infatti l'indice $R^2$ potrebbe essere influenzato da diversi fattori quali: \textbf{Overfitting, Non linearità, Multicollinearità e Outlier}.\newline
+        \begin{center}
+            \includegraphics{images/results.png}
+        \end{center}
+        \\
+        Come si vede dal test, utilizzando la \textbf{regressione lineare} si ottengono MAE ed MSE piuttosto bassi, mentre l'indice $R^2$ è molto vicino a 1, questo ci dice che il modello così costruito riesce ad approssimare particolarmente bene i dati.\newline
+        \\
+        La stessa cosa non accade invece se utilizziamo rispettivamente \textbf{ElasticNet} oppure un \textbf{Decision Tree Regressor}.\newline
+        \begin{center}
+            \includegraphics[scale=0.6]{images/elasticNetResults.png}
+            \includegraphics[scale=0.6]{images/regressionTreeResults.png}
+        \end{center}
+        \newpage
+        \subsection{Bonus}
+        Per la creazione di questo progetto sono state impiegate diverse Intelligenze Artificiali. Principalmente questa scelta è stata fatta per rispondere ad una domanda che ultimamente preoccupa molte persone: \textbf{Le IA metteranno fine al ruolo dell'informatico così come lo conosciamo?}\newline\\
+        In particolare quelle provate sono:
+        \begin{itemize}
+            \item ChatGPT
+            \item Github Copilot
+            \item LogoAI e Zyro IA Upscaler
+            \item DALL·E 2
+        \end{itemize}
+        Per quanto riguarda \textbf{ChatGPT}, questa è stata utilizzata prevalentemente per ottenere definizioni formali che racchiudessero un concetto chiave. Si è rivelato inoltre un ottimo tool per rispondere a domande "stupide" senza dover disturbare inutilmente colleghi o professori. Le sue risposte sono risultate quasi sempre corrette, con un margine minimo di errore facilmente integrabile attraverso una ricerca su libri o altre fonti.\newline
+        \textbf{Github Copilot} è stato utilizzato per apprendere velocemente il linguaggio Python, con il quale l'autore di questo progetto non aveva mai scritto neanche una riga di codice. I suoi suggerimenti sono tuttavia piuttosto imprecisi, tende infatti a generare codice molto confusionario e non sempre coerente con quanto scritto in precedenza. Nonostante ciò ha rappresentato un notevole boost in velocità dal punto di vista dell'apprendimento, arrivando ad essere nelle fasi finali del progetto un'ottima alternativa al completamento automatico integrato nell'IDE.\newline
+        \textbf{LogoAI} è stato molto banalmente impiegato per generare il logo utilizzato in pagina [1]. Un tool molto utile per progetti indipendenti che necessitano di un logo senza la possibilità di assumere un grafico, ma non è neanche lontanamente paragonabile al lavoro di creatività umana che potrebbe effettuare una persona esperta. Genera inoltre loghi a bassissima risoluzione se non si aderisce ad un piano a pagamento, ma il problema è facilmente aggirabile facendo uno screenshot, ripulendolo dai banner con Photoshop ed usando tool di \textbf{upscaling} come quello integrato in \textbf{Zyro}.\newline
+        \textbf{DALL·E 2} infine è stato utilizzato per generare alcune immagini inserite nelle slide di presentazione.
+        \newline\\
+        Per rispondere dunque alla domanda, allo stato attuale \textbf{non} mi sento di dire che le IA possano minacciare il ruolo dell'informatico, poichè questo risulta essere l'unico capace di dargli i giusti input per portarle a rispondere in un determinato modo (nonchè l'unica figura potenzialmente capace di capire come funzionano dietro le quinte). Ritengo però che queste possano essere, almeno al momento della stesura di questa documentazione, ottimi tool per gestire task ripetitivi, lenti e noiosi, ma ancora di più che possano essere integrate agli strumenti tradizionali per velocizzare notevolemente la fase di \textbf{apprendimento e verifica delle informazioni}.
+        
+        
+
+\end{document}
