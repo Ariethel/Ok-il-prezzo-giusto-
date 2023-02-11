@@ -1,4 +1,4 @@
-# Ok-il-prezzo-giusto-
+# Ok, il prezzo è giusto!
 Algoritmo di regressione implementato per il progetto di Fondamenti di Intelligenza Artificiale
 
 * Antonio Renzullo 0512111906
